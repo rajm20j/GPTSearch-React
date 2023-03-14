@@ -1,5 +1,5 @@
 import './App.scss';
-import './styles/globals.scss';
+import './styles/global.scss';
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import LandingPage from './Pages/Landing/LandingPage';

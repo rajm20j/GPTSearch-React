@@ -1,0 +1,30 @@
+.input-cont {
+  height: 60px;
+  width: 80%;
+
+  .input-text {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 10px;
+  }
+
+  .input-btn {
+    height: 100%;
+    padding: 8px;
+
+    img {
+      height: 80%;
+      opacity: 0.8;
+    }
+
+    &:hover {
+      background-color: rgb(186, 220, 249);
+    }
+
+    &:active {
+      background-color: skyblue;
+      box-shadow: 5px 5px 10px rgb(186, 220, 249);
+    }
+  }
+}

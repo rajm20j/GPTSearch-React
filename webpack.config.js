@@ -28,7 +28,7 @@ module.exports = {
       { test: /\.tsx?$/, loader: 'babel-loader' },
       { test: /\.jsx?$/, loader: 'babel-loader' },
       { test: /\.tsx?$/, loader: 'ts-loader' },
-      { test: /\.(png|jp(e*)g|svg|gif)$/, type: "asset/resource" },
+      { test: /\.(png|jp(e*)g|svg|gif)$/, type: 'asset/resource' },
       { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
     ]
   },

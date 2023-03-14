@@ -1,0 +1,171 @@
+@use 'partials' as *;
+
+.icon {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+}
+
+.d-flx {
+  display: flex;
+}
+
+.a-itm {
+  &-c {
+    align-items: center;
+  }
+
+  &-s {
+    align-items: start;
+  }
+
+  &-e {
+    align-items: end;
+  }
+}
+
+.flx-d-row {
+  flex-direction: row;
+}
+
+.flx-d-col {
+  flex-direction: column;
+}
+
+.j-con {
+  &-c {
+    justify-content: center;
+  }
+
+  &-s {
+    justify-content: start;
+  }
+
+  &-sb {
+    justify-content: space-between;
+  }
+
+  &-sa {
+    justify-content: space-around;
+  }
+
+  &-se {
+    justify-content: space-evenly;
+  }
+}
+
+.h-100 {
+  &-p {
+    height: 100%;
+  }
+
+  &-vh {
+    height: 100vh;
+  }
+}
+
+.h-fit-con {
+  height: fit-content;
+}
+
+.w-fit-con {
+  width: fit-content;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+}
+
+.w-100 {
+  &-p {
+    width: 100%;
+  }
+
+  &-vw {
+    width: 100vw;
+  }
+}
+
+.c-pointer {
+  cursor: pointer;
+}
+
+.p-evt-none {
+  pointer-events: none;
+}
+
+.s-disable {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.bg-white {
+  background-color: $white;
+}
+
+@each $key,
+$val in $scales {
+  .m-#{$key} {
+    margin: $val;
+  }
+
+  .mt-#{$key} {
+    margin-top: $val;
+  }
+
+  .mb-#{$key} {
+    margin-bottom: $val;
+  }
+
+  .ml-#{$key} {
+    margin-left: $val;
+  }
+
+  .mr-#{$key} {
+    margin-right: $val;
+  }
+
+  .mi-#{$key} {
+    margin-inline: $val;
+  }
+
+  .mb-#{$key} {
+    margin-block: $val;
+  }
+
+  .p-#{$key} {
+    padding: $val;
+  }
+
+  .pt-#{$key} {
+    padding-top: $val;
+  }
+
+  .pb-#{$key} {
+    padding-bottom: $val;
+  }
+
+  .pl-#{$key} {
+    padding-left: $val;
+  }
+
+  .pr-#{$key} {
+    padding-right: $val;
+  }
+
+  .pi-#{$key} {
+    padding-inline: $val;
+  }
+
+  .pb-#{$key} {
+    padding-block: $val;
+  }
+}
+
+@each $key,
+$val in $font-size {
+  .fs-#{$key} {
+    font-size: $val;
+  }
+}

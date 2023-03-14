@@ -1,0 +1,39 @@
+export type ISearchQuery = {
+  body: ISearchBody;
+};
+
+export type ISearchResponse = {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  usage: IUsage;
+  choices: IChoice[];
+};
+
+type ISearchBody = {
+  model: string;
+  messages: ISearchMessage[];
+};
+
+type ISearchMessage = {
+  role: string;
+  content: string;
+};
+
+export type IChoice = {
+  message: IMessage;
+  finish_reason?: any;
+  index: number;
+};
+
+type IMessage = {
+  role: string;
+  content: string;
+};
+
+type IUsage = {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+};

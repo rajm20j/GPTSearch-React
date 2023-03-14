@@ -1,0 +1,11 @@
+.btn-con {
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 5px 5px lightblue;
+  transition: 50ms all ease-in-out;
+
+  &:active {
+    box-shadow: none;
+    transform: translate(5px, 5px);
+  }
+}
