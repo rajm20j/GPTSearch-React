@@ -2,7 +2,7 @@ import './LandingPage.scss';
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { postSearchRequest } from '../../common/apis';
-import { ISearchResponse } from './interfaces/interfaces';
+import { IMessage, ISearchResponse } from './interfaces/interfaces';
 import AppButton from '../../ui-components/appButton/AppButton';
 import useCheckDevice from '../../hook/useDevice';
 import MarkdownContainer from '../../components/MarkdownContainer/MarkdownContainer';
@@ -13,12 +13,14 @@ const LandingPage: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const markdownListRef = useRef<HTMLInputElement>(null);
   const [searchResponse, setSearchResponse] = useState<ISearchResponse>(null);
+  const [messageList, setMessageList] = useState<IMessage[]>([]);
   const isMobile = useCheckDevice();
   const [markdownList, setMarkdownList] = useState<any>([]);
   useMemo(updateMarkdownList, [searchResponse]);
   useMemo(scrollToAnswer, [markdownList]);
   const { isLoading, mutate } = useMutation({
     mutationFn: postSearchRequest,
+    mutationKey: ["chat"],
     onSuccess: ({ data }) => onSearchSuccess(data)
   });
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
@@ -34,26 +36,43 @@ const LandingPage: React.FC = () => {
     onSearch();
   };
 
+  useEffect(() => {
+    console.log("useEffect called");
+    console.log([...messageList]);
+  })
+
   const onSearch = () => {
+    console.log("Called");
     if (inputRef.current.value) {
+      const message: IMessage = {
+        role: 'user',
+        content: (inputRef.current.value as string).trim()
+      }
       mutate({
         body: {
           model: 'gpt-3.5-turbo',
           messages: [
-            {
-              role: 'user',
-              content: (inputRef.current.value as string).trim()
-            }
+            ...messageList,
+            message
           ]
         }
       });
+      setMessageList([
+        ...messageList,
+        message
+      ]);
     }
   };
 
   const onSearchSuccess = (data: ISearchResponse) => {
+    console.log("onSearchSuccess called for data: ", data);
+    setMessageList([
+      ...messageList,
+      { ...data.choices[0].message }
+    ]);
+    data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
+    setSearchResponse(data);
     if (inputRef.current.value) {
-      data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
-      setSearchResponse(data);
       inputRef.current.value = '';
     }
   };

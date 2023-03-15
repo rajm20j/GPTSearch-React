@@ -8,7 +8,7 @@ export const getFakeData = () => {
 export const postSearchRequest = ({ body }: ISearchQuery) => {
   return axios.post<ISearchResponse>('https://api.openai.com/v1/chat/completions', body, {
     headers: {
-      Authorization: `Bearer ${process.env.API_KEY}`
+      Authorization: `Bearer ${process.env.OPEN_API_KEY}`
     }
   });
 };

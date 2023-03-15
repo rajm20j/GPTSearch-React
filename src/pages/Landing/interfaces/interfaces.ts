@@ -13,12 +13,7 @@ export type ISearchResponse = {
 
 type ISearchBody = {
   model: string;
-  messages: ISearchMessage[];
-};
-
-type ISearchMessage = {
-  role: string;
-  content: string;
+  messages: IMessage[];
 };
 
 export type IChoice = {
@@ -27,7 +22,7 @@ export type IChoice = {
   index: number;
 };
 
-type IMessage = {
+export type IMessage = {
   role: string;
   content: string;
 };
