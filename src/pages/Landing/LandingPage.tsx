@@ -1,19 +1,32 @@
 import './LandingPage.scss';
-import React, { useRef, useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { getFakeData, postSearchRequest } from '../../common/apis';
-import SearchIcon from '../../assets/icons/search.svg';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { postSearchRequest } from '../../common/apis';
 import { ISearchResponse } from './interfaces/interfaces';
 import AppButton from '../../ui-components/appButton/AppButton';
-import AnswerContainer from '../../components/AnswerContainer/AnswerContainer';
+import useCheckDevice from '../../hook/useDevice';
+import MarkdownContainer from '../../components/MarkdownContainer/MarkdownContainer';
+import VoiceSearchIcon from '../../assets/icons/voice-search.svg';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const LandingPage: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const markdownListRef = useRef<HTMLInputElement>(null);
   const [searchResponse, setSearchResponse] = useState<ISearchResponse>(null);
-  const { data, isLoading, mutate } = useMutation({
+  const isMobile = useCheckDevice();
+  const [markdownList, setMarkdownList] = useState<any>([]);
+  useMemo(updateMarkdownList, [searchResponse]);
+  useMemo(scrollToAnswer, [markdownList]);
+  const { isLoading, mutate } = useMutation({
     mutationFn: postSearchRequest,
     onSuccess: ({ data }) => onSearchSuccess(data)
   });
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
 
   const onEnterKeySearch = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -26,63 +39,130 @@ const LandingPage: React.FC = () => {
   };
 
   const onSearch = () => {
-    if (true) {
-      // mutate({
-      //   body: {
-      //     model: 'gpt-3.5-turbo',
-      //     messages: [
-      //       {
-      //         role: 'user',
-      //         content: inputRef.current.value as string
-      //       }
-      //     ]
-      //   }
-      // });
-      setSearchResponse({
-        "id": "chatcmpl-6u0jrAUV2Jan5UU3W38tS1oXT9M2h",
-        "object": "chat.completion",
-        "created": 1678807227,
-        "model": "gpt-3.5-turbo-0301",
-        "usage": {
-          "prompt_tokens": 15,
-          "completion_tokens": 283,
-          "total_tokens": 298
-        },
-        "choices": [
-          {
-            "message": {
-              "role": "assistant",
-              "content": "\n\nAs an AI language model, I cannot provide actual code that is optimized and functional but below is the standard structure to create a React component: \n\n```jsx\nimport React from 'react';\n\n// Define your component as a function or class inheriting from React.Component\nfunction MyComponent(props) {\n  // your code here\n\n  return (\n    <div>\n       {/* your component JSX goes here */}\n    </div>\n  );\n}\n\nexport default MyComponent;\n```\n\nAnd, here is an example implementation of the counter component in React.js.\n\n```jsx\nimport React, {useState} from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  function increment() {\n    setCount(count + 1);\n  }\n\n  function decrement() {\n    setCount(count - 1);\n  }\n\n  return (\n    <div>\n      <h1>Counter: {count}</h1>\n      <button onClick={increment}>Increment</button>\n      <button onClick={decrement}>Decrement</button>\n    </div>\n  );\n}\n\nexport default Counter;\n```\n\nHere, we have used the useState hook to manage the state of the component. We have defined two functions to increment and decrement the count, and we have used the onClick event handlers to bind these functions with the buttons. Finally, we have rendered the count and the buttons."
-            },
-            "finish_reason": "stop",
-            "index": 0
-          }
-        ]
-      })
+    if (inputRef.current.value) {
+      mutate({
+        body: {
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'user',
+              content: (inputRef.current.value as string).trim()
+            }
+          ]
+        }
+      });
     }
   };
 
   const onSearchSuccess = (data: ISearchResponse) => {
-    setSearchResponse(data);
+    if (inputRef.current.value) {
+      data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
+      setSearchResponse(data);
+      inputRef.current.value = '';
+    }
   };
+
+  function updateMarkdownList() {
+    if (searchResponse) {
+      setMarkdownList([
+        ...markdownList,
+        <MarkdownContainer
+          key={markdownList.length}
+          className={`mb-16`}
+          size={`${isMobile ? 'small' : 'medium'}`}
+          value={searchResponse.choices[0].message.content}
+        ></MarkdownContainer>
+      ]);
+    }
+  }
+
+  function scrollToAnswer() {
+    if (markdownListRef) {
+      setTimeout(() => {
+        markdownListRef.current?.lastElementChild?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        });
+      }, 100);
+    }
+  }
+
+  const onVoiceSearchClick = () => {
+    if (!browserSupportsSpeechRecognition) {
+      alert("Browser does not support speech recognition");
+    }
+    listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening();
+  }
+
+  const onResetClick = () => {
+    setMarkdownList([]);
+    setSearchResponse(null);
+  }
 
   return (
     <>
-      <div className="h-100-vh w-100-vw flx-d-col d-flx a-itm-c j-con-c">
-        <div className="input-cont d-flx a-itm-c j-con-c">
+      <div className="landing-cont h-100-p w-100-p flx-d-col d-flx a-itm-c j-con-c">
+        <div className={`heading-cont ${searchResponse ? 'heading-cont-is-collapsed' : ''}`}>
+          GPT<span className='search-txt-cont'>Search</span>
+        </div>
+        <div
+          className={`input-cont d-flx a-itm-c j-con-c ${isMobile ? 'flx-d-col' : ''}`}
+          style={{
+            bottom: searchResponse ? '0px' : '200px',
+            maxWidth: searchResponse ? '100%' : '768px',
+            background: searchResponse ? "white" : "unset",
+            paddingBlock: searchResponse ? "16px" : "unset",
+            paddingInline: searchResponse ? "32px" : "unset",
+            boxShadow: searchResponse ? "0px -5px lightgray" : "unset"
+          }}
+        >
           <input
-            autoComplete="off"
             className="input-text fs-24"
             type="text"
             onKeyDown={onEnterKeySearch}
             ref={inputRef}
+            defaultValue={transcript ?? ""}
+            autoFocus
           ></input>
-          <AppButton className='ml-16' label="Search" size='large' onClick={onMouseClickSearch}></AppButton>
+          <div className={`d-flx a-itm-c ${isMobile ? 'mt-16 w-100-p j-con-flx-e' : ''}`}>
+            <AppButton
+              className={`ml-16 ${markdownList.length !== 0 ? '' : 'd-none'}`}
+              label="Reset"
+              size={isMobile ? 'medium' : 'large'}
+              onClick={onResetClick}
+              isLoading={isLoading}
+              style={{
+                order: 1
+              }}
+              shadowColor="red-shadow"
+            ></AppButton>
+            <AppButton
+              className="ml-16"
+              label="Search"
+              size={isMobile ? 'medium' : 'large'}
+              onClick={onVoiceSearchClick}
+              isLoading={listening}
+              shadowColor="pink-shadow"
+              render={<img className="icon speech-icon" src={VoiceSearchIcon} />}
+              style={{
+                order: isMobile ? 3 : 2
+              }}
+            ></AppButton>
+            <AppButton
+              className="ml-16"
+              label="Search"
+              size={isMobile ? 'medium' : 'large'}
+              onClick={onMouseClickSearch}
+              isLoading={isLoading}
+              style={{
+                order: isMobile ? 2 : 3
+              }}
+            ></AppButton>
+          </div>
         </div>
-        <div>
-          {searchResponse?.choices.map((v, i) => {
-            return <AnswerContainer key={i} size='medium' className='mi-40 mt-16' value={v}></AnswerContainer>;
-          })}
+        <div className="markdown-cont w-100-p" ref={markdownListRef}>
+          {markdownList}
         </div>
       </div>
     </>

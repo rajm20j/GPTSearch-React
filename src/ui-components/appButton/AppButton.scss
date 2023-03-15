@@ -1,11 +1,27 @@
 .btn-con {
   border: 1px solid black;
   border-radius: 10px;
-  box-shadow: 5px 5px lightblue;
   transition: 50ms all ease-in-out;
+  background-color: whitesmoke;
 
   &:active {
     box-shadow: none;
     transform: translate(5px, 5px);
   }
 }
+
+@mixin add-shodows() {
+  .blue-shadow {
+    box-shadow: 5px 5px lightblue;
+  }
+
+  .pink-shadow {
+    box-shadow: 5px 5px #f888b1;
+  }
+
+  .red-shadow {
+    box-shadow: 5px 5px rgb(206, 78, 78);
+  }
+}
+
+@include add-shodows();

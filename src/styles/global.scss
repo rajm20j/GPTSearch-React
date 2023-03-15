@@ -1,13 +1,23 @@
 @use 'partials' as *;
 
 .icon {
-  height: 16px;
-  width: 16px;
+  height: 24px;
+  width: 24px;
   display: inline-block;
 }
 
-.d-flx {
-  display: flex;
+.d {
+  &-flx {
+    display: flex;
+  }
+
+  &-none {
+    display: none;
+  }
+
+  &-block {
+    display: block;
+  }
 }
 
 .a-itm {
@@ -26,10 +36,18 @@
 
 .flx-d-row {
   flex-direction: row;
+
+  &-rev {
+    flex-direction: row-reverse;
+  }
 }
 
 .flx-d-col {
   flex-direction: column;
+
+  &-rev {
+    flex-direction: column-reverse;
+  }
 }
 
 .j-con {
@@ -52,6 +70,14 @@
   &-se {
     justify-content: space-evenly;
   }
+
+  &-flx-e {
+    justify-content: flex-end;
+  }
+
+  &-flx-s {
+    justify-content: flex-start;
+  }
 }
 
 .h-100 {
@@ -72,6 +98,16 @@
   width: fit-content;
   width: -moz-fit-content;
   width: -webkit-fit-content;
+}
+
+.a-self {
+  &-s {
+    align-self: flex-start;
+  }
+
+  &-e {
+    align-self: flex-end;
+  }
 }
 
 .w-100 {
@@ -167,5 +203,12 @@ $val in $scales {
 $val in $font-size {
   .fs-#{$key} {
     font-size: $val;
+  }
+}
+
+@each $key,
+$val in $font-weight {
+  .fw-#{$key} {
+    font-weight: $val;
   }
 }

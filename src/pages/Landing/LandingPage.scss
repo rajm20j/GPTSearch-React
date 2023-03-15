@@ -1,30 +1,73 @@
-.input-cont {
-  height: 60px;
-  width: 80%;
+@import '../../styles/partials/screen-size';
 
-  .input-text {
-    height: 100%;
-    width: 100%;
-    max-width: 600px;
-    border-radius: 10px;
+.landing-cont {
+  .heading-cont {
+    margin-top: 200px;
+    font-size: 60px;
+    color: #ECB602;
+    font-weight: 700;
+    transition: all 200ms ease-in-out;
+    align-self: center;
+
+    .search-txt-cont {
+      color: white;
+      font-weight: 400;
+      transition: all 200ms ease-in-out;
+    }
+
+    &-is-collapsed {
+      margin-top: 16px;
+      font-size: 30px;
+      align-self: start;
+      margin-left: 5%;
+
+      .search-txt-cont {
+        opacity: 0;
+      }
+    }
   }
 
-  .input-btn {
-    height: 100%;
-    padding: 8px;
+  .input-cont {
+    height: 120px;
+    width: 90%;
+    position: fixed;
+    max-width: 768px;
+    transition: 200ms all ease-in;
 
-    img {
-      height: 80%;
-      opacity: 0.8;
+    .input-text {
+      font-size: 16px;
+      height: 100%;
+      width: 100%;
+      border-radius: 10px;
+    }
+  }
+
+  .markdown-cont {
+    margin-bottom: 150px;
+    width: 90%;
+  }
+}
+
+@media #{$mobile} {
+  .landing-cont {
+    .heading-cont {
+      font-size: 100px;
+
+      &-is-collapsed {
+        font-size: 50px;
+      }
     }
 
-    &:hover {
-      background-color: rgb(186, 220, 249);
+    .input-cont {
+      height: 60px;
+
+      .input-text {
+        font-size: 24px;
+      }
     }
 
-    &:active {
-      background-color: skyblue;
-      box-shadow: 5px 5px 10px rgb(186, 220, 249);
+    .speech-icon {
+      scale: 1.5;
     }
   }
 }
