@@ -9,7 +9,7 @@ type AppButtonProps = {
   isLoading?: boolean;
   render?: React.ReactNode;
   shadowColor?: 'blue-shadow' | 'pink-shadow' | 'red-shadow';
-  type?: 'primary' | 'alert'
+  type?: 'primary' | 'alert';
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const getDimension = (size: ISize): string => {
@@ -43,9 +43,14 @@ const AppButton: React.FC<AppButtonProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`btn-con c-pointer s-disable ${getDimension(size)} ${className} ${(!isLoading && shadowColor) ?? 'blue-shadow'
-        }`}
-      style={{ ...style, background: type === "alert" ? "red" : "", color: type === "alert" ? "white" : "" }}
+      className={`btn-con c-pointer s-disable ${getDimension(size)} ${className} ${
+        (!isLoading && shadowColor) ?? 'blue-shadow'
+      }`}
+      style={{
+        ...style,
+        background: type === 'alert' ? 'red' : '',
+        color: type === 'alert' ? 'white' : ''
+      }}
     >
       {isLoading ? '...' : render ?? label}
     </div>

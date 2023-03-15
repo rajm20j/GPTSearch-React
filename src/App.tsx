@@ -11,8 +11,8 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
-        <Route path="/landing" element={<LandingPage />} />
-        <Route path="*" element={<Navigate to={'/landing'} />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="*" element={<Navigate to={'/'} />} />
       </Routes>
       <ReactQueryDevtools />
     </QueryClientProvider>

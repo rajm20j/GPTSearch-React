@@ -21,12 +21,8 @@ const LandingPage: React.FC = () => {
     mutationFn: postSearchRequest,
     onSuccess: ({ data }) => onSearchSuccess(data)
   });
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   const onEnterKeySearch = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -90,31 +86,32 @@ const LandingPage: React.FC = () => {
 
   const onVoiceSearchClick = () => {
     if (!browserSupportsSpeechRecognition) {
-      alert("Browser does not support speech recognition");
+      alert('Browser does not support speech recognition');
     }
+    resetTranscript();
     listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening();
-  }
+  };
 
   const onResetClick = () => {
     setMarkdownList([]);
     setSearchResponse(null);
-  }
+  };
 
   return (
     <>
       <div className="landing-cont h-100-p w-100-p flx-d-col d-flx a-itm-c j-con-c">
         <div className={`heading-cont ${searchResponse ? 'heading-cont-is-collapsed' : ''}`}>
-          GPT<span className='search-txt-cont'>Search</span>
+          GPT<span className="search-txt-cont">Search</span>
         </div>
         <div
           className={`input-cont d-flx a-itm-c j-con-c ${isMobile ? 'flx-d-col' : ''}`}
           style={{
             bottom: searchResponse ? '0px' : '200px',
             maxWidth: searchResponse ? '100%' : '768px',
-            background: searchResponse ? "white" : "unset",
-            paddingBlock: searchResponse ? "16px" : "unset",
-            paddingInline: searchResponse ? "32px" : "unset",
-            boxShadow: searchResponse ? "0px -5px lightgray" : "unset"
+            background: searchResponse ? 'white' : 'unset',
+            paddingBlock: searchResponse ? '16px' : 'unset',
+            paddingInline: searchResponse ? '32px' : 'unset',
+            boxShadow: searchResponse ? '0px -5px lightgray' : 'unset'
           }}
         >
           <input
@@ -122,7 +119,7 @@ const LandingPage: React.FC = () => {
             type="text"
             onKeyDown={onEnterKeySearch}
             ref={inputRef}
-            defaultValue={transcript ?? ""}
+            defaultValue={transcript ?? ''}
             autoFocus
           ></input>
           <div className={`d-flx a-itm-c ${isMobile ? 'mt-16 w-100-p j-con-flx-e' : ''}`}>
@@ -131,7 +128,6 @@ const LandingPage: React.FC = () => {
               label="Reset"
               size={isMobile ? 'medium' : 'large'}
               onClick={onResetClick}
-              isLoading={isLoading}
               style={{
                 order: 1
               }}

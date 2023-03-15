@@ -1,6 +1,7 @@
 /*eslint-disable */
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 require('dotenv').config({ path: './.env' });
 
 module.exports = {
@@ -34,10 +35,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'index.html'
+      template: 'index.html',
+      favicon: './src/assets/images/icon.png'
     }),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env)
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './manifest.json', to: './assets/manifest.json' }]
     })
   ]
 };

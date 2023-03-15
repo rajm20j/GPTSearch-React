@@ -140,8 +140,7 @@
   background-color: $white;
 }
 
-@each $key,
-$val in $scales {
+@each $key, $val in $scales {
   .m-#{$key} {
     margin: $val;
   }
@@ -199,15 +198,13 @@ $val in $scales {
   }
 }
 
-@each $key,
-$val in $font-size {
+@each $key, $val in $font-size {
   .fs-#{$key} {
     font-size: $val;
   }
 }
 
-@each $key,
-$val in $font-weight {
+@each $key, $val in $font-weight {
   .fw-#{$key} {
     font-weight: $val;
   }
