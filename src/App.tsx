@@ -2,8 +2,7 @@ import './App.scss';
 import './styles/global.scss';
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import LandingPage from './Pages/Landing/LandingPage';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import LandingPage from './pages/Landing/LandingPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
