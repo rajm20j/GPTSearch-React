@@ -14,7 +14,6 @@ const App: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="*" element={<Navigate to={'/'} />} />
       </Routes>
-      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 };
