@@ -114,6 +114,7 @@ const LandingPage: React.FC = () => {
   const onResetClick = () => {
     setMarkdownList([]);
     setSearchResponse(null);
+    setMessageList([]);
   };
 
   return (
