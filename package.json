@@ -1,7 +1,7 @@
 {
-  "name": "tp_frontend_vendor",
+  "name": "gpt-search",
   "version": "1.0.0",
-  "description": "TransitPro vendor frontend application",
+  "description": "GPT search first react application",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
