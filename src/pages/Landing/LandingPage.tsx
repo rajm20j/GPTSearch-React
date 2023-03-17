@@ -47,7 +47,7 @@ const LandingPage: React.FC = () => {
   useMemo(scrollToAnswer, [markdownList]);
   const { isLoading, mutate } = useMutation({
     mutationFn: postSearchRequest,
-    mutationKey: ["chat"],
+    mutationKey: ['chat'],
     onSuccess: ({ data }) => onSearchSuccess(data)
   });
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
