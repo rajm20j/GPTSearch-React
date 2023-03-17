@@ -42,7 +42,10 @@ module.exports = {
       'process.env': JSON.stringify(process.env)
     }),
     new CopyWebpackPlugin({
-      patterns: [{ from: './manifest.json', to: './assets/manifest.json' }, { from: './src/assets/images/icon.png', to: './assets/icon.png' }]
+      patterns: [
+        { from: './manifest.json', to: './assets/manifest.json' },
+        { from: './src/assets/images/icon.png', to: './assets/icon.png' }
+      ]
     })
   ]
 };

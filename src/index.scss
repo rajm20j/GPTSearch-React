@@ -7,10 +7,12 @@ body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   overflow: auto;
-  background-image: linear-gradient(to bottom,
+  background-image: linear-gradient(
+      to bottom,
       transparent,
       transparent 16.6667%,
-      $bg-color 16.6667%),
+      $bg-color 16.6667%
+    ),
     linear-gradient(to right, $dot-color, $dot-color 16.6667%, $bg-color 16.6667%);
   background-size: $dot-size $dot-size;
   animation: bg-animate 120s infinite;

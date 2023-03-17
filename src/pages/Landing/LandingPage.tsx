@@ -1,5 +1,5 @@
 import './LandingPage.scss';
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useMemo, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { postSearchRequest } from '../../common/apis';
 import { IMessage, ISearchResponse } from './interfaces/interfaces';
@@ -13,71 +13,11 @@ const LandingPage: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const markdownListRef = useRef<HTMLInputElement>(null);
   const [searchResponse, setSearchResponse] = useState<ISearchResponse>(null);
-  const [messageList, setMessageList] = useState<IMessage[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
   const isMobile = useCheckDevice();
-  const [markdownList, setMarkdownList] = useState<any>([]);
-  useMemo(updateMarkdownList, [searchResponse]);
-  useMemo(scrollToAnswer, [markdownList]);
-  const { isLoading, mutate } = useMutation({
-    mutationFn: postSearchRequest,
-    mutationKey: ["chat"],
-    onSuccess: ({ data }) => onSearchSuccess(data)
-  });
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
+  const [markdownList, setMarkdownList] = useState<JSX.Element[]>([]);
 
-  const onEnterKeySearch = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      onSearch();
-    }
-  };
-
-  const onMouseClickSearch = () => {
-    onSearch();
-  };
-
-  useEffect(() => {
-    console.log("useEffect called");
-    console.log([...messageList]);
-  })
-
-  const onSearch = () => {
-    console.log("Called");
-    if (inputRef.current.value) {
-      const message: IMessage = {
-        role: 'user',
-        content: (inputRef.current.value as string).trim()
-      }
-      mutate({
-        body: {
-          model: 'gpt-3.5-turbo',
-          messages: [
-            ...messageList,
-            message
-          ]
-        }
-      });
-      setMessageList([
-        ...messageList,
-        message
-      ]);
-    }
-  };
-
-  const onSearchSuccess = (data: ISearchResponse) => {
-    console.log("onSearchSuccess called for data: ", data);
-    setMessageList([
-      ...messageList,
-      { ...data.choices[0].message }
-    ]);
-    data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
-    setSearchResponse(data);
-    if (inputRef.current.value) {
-      inputRef.current.value = '';
-    }
-  };
-
-  function updateMarkdownList() {
+  const updateMarkdownList = useCallback(() => {
     if (searchResponse) {
       setMarkdownList([
         ...markdownList,
@@ -89,10 +29,10 @@ const LandingPage: React.FC = () => {
         ></MarkdownContainer>
       ]);
     }
-  }
+  }, [searchResponse, markdownList, isMobile]);
 
-  function scrollToAnswer() {
-    if (markdownListRef) {
+  const scrollToAnswer = useCallback(() => {
+    if (markdownListRef.current) {
       setTimeout(() => {
         markdownListRef.current?.lastElementChild?.scrollIntoView({
           behavior: 'smooth',
@@ -101,21 +41,79 @@ const LandingPage: React.FC = () => {
         });
       }, 100);
     }
-  }
+  }, [markdownListRef]);
 
-  const onVoiceSearchClick = () => {
+  useMemo(updateMarkdownList, [searchResponse]);
+  useMemo(scrollToAnswer, [markdownList]);
+  const { isLoading, mutate } = useMutation({
+    mutationFn: postSearchRequest,
+    mutationKey: ["chat"],
+    onSuccess: ({ data }) => onSearchSuccess(data)
+  });
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
+
+  const onSearch = useCallback(() => {
+    // console.log("Called");
+    if (inputRef.current.value) {
+      const message: IMessage = {
+        role: 'user',
+        content: (inputRef.current.value as string).trim()
+      };
+      mutate({
+        body: {
+          model: 'gpt-3.5-turbo',
+          messages: [...messages, message]
+        }
+      });
+      setMessages([...messages, message]);
+    }
+  }, [inputRef, mutate, messages]);
+
+  const onEnterKeySearch = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        onSearch();
+      }
+    },
+    [onSearch]
+  );
+
+  const onMouseClickSearch = useCallback(() => {
+    onSearch();
+  }, [onSearch]);
+
+  useEffect(() => {
+    // console.log("useEffect called");
+    // console.log([...messages]);
+  }, [messages]);
+
+  const onSearchSuccess = useCallback(
+    (data: ISearchResponse) => {
+      // console.log("onSearchSuccess called for data: ", data);
+      setMessages([...messages, { ...data.choices[0].message }]);
+      data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
+      setSearchResponse(data);
+      if (inputRef.current.value) {
+        inputRef.current.value = '';
+      }
+    },
+    [inputRef, messages]
+  );
+
+  const onVoiceSearchClick = useCallback(() => {
     if (!browserSupportsSpeechRecognition) {
       alert('Browser does not support speech recognition');
     }
     resetTranscript();
     listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening();
-  };
+  }, [browserSupportsSpeechRecognition, resetTranscript, listening]);
 
-  const onResetClick = () => {
+  const onResetClick = useCallback(() => {
     setMarkdownList([]);
-    setSearchResponse(null);
-    setMessageList([]);
-  };
+    setSearchResponse(undefined);
+    setMessages([]);
+  }, []);
 
   return (
     <>
@@ -148,9 +146,7 @@ const LandingPage: React.FC = () => {
               label="Reset"
               size={isMobile ? 'medium' : 'large'}
               onClick={onResetClick}
-              style={{
-                order: 1
-              }}
+              style={{ order: 1 }}
               shadowColor="red-shadow"
             ></AppButton>
             <AppButton
