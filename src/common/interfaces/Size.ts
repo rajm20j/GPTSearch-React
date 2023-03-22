@@ -1,1 +1,1 @@
-export type ISize = 'small' | 'medium' | 'large';
+export type ISize = "small" | "medium" | "large";

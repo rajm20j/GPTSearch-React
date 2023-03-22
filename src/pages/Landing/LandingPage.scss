@@ -1,4 +1,4 @@
-@import '../../styles/partials/screen-size';
+@import "../../styles/partials/screen-size";
 
 .landing-cont {
   .heading-cont {
@@ -55,6 +55,7 @@
       font-size: 100px;
 
       &-is-collapsed {
+        margin-top: 16px;
         font-size: 50px;
       }
     }
