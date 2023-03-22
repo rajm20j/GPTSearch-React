@@ -51,6 +51,7 @@
 @media #{$mobile} {
   .landing-cont {
     .heading-cont {
+      margin-top: 300px;
       font-size: 100px;
 
       &-is-collapsed {

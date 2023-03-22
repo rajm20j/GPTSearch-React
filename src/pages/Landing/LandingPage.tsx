@@ -54,7 +54,6 @@ const LandingPage: React.FC = () => {
     useSpeechRecognition();
 
   const onSearch = useCallback(() => {
-    // console.log("Called");
     if (inputRef.current.value) {
       const message: IMessage = {
         role: 'user',
@@ -83,14 +82,8 @@ const LandingPage: React.FC = () => {
     onSearch();
   }, [onSearch]);
 
-  useEffect(() => {
-    // console.log("useEffect called");
-    // console.log([...messages]);
-  }, [messages]);
-
   const onSearchSuccess = useCallback(
     (data: ISearchResponse) => {
-      // console.log("onSearchSuccess called for data: ", data);
       setMessages([...messages, { ...data.choices[0].message }]);
       data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
       setSearchResponse(data);
@@ -124,7 +117,7 @@ const LandingPage: React.FC = () => {
         <div
           className={`input-cont d-flx a-itm-c j-con-c ${isMobile ? 'flx-d-col' : ''}`}
           style={{
-            bottom: searchResponse ? '0px' : '200px',
+            bottom: searchResponse ? '0px' : isMobile ? '200px' : '400px',
             maxWidth: searchResponse ? '100%' : '768px',
             background: searchResponse ? 'white' : 'unset',
             paddingBlock: searchResponse ? '16px' : 'unset',
