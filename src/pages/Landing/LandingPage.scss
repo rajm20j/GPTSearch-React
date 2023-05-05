@@ -1,10 +1,11 @@
+@import "../../styles/partials/colors";
 @import "../../styles/partials/screen-size";
 
 .landing-cont {
   .heading-cont {
     margin-top: 200px;
     font-size: 60px;
-    color: #ecb602;
+    color: $yellow;
     font-weight: 700;
     transition: all 200ms ease-in-out;
     align-self: center;
@@ -48,7 +49,7 @@
   }
 }
 
-@media #{$mobile} {
+@media #{$desktop} {
   .landing-cont {
     .heading-cont {
       margin-top: 300px;

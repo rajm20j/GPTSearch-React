@@ -1,52 +1,61 @@
 /*eslint-disable */
+const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-require("dotenv").config({ path: "./.env" });
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
-  mode: "development",
+  mode: "production",
   entry: "./src/index.tsx",
   output: {
+    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
-    path: __dirname + "/dist",
     publicPath: "/"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json"]
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
-  devServer: {
-    static: "./dist",
-    port: 3000,
-    hot: true,
-    historyApiFallback: true
-  },
-  devtool: "inline-source-map",
   module: {
     rules: [
-      { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] },
-      { test: /\.css$/, use: ["style-loader", "css-loader"] },
-      { test: /\.tsx?$/, loader: "babel-loader" },
-      { test: /\.jsx?$/, loader: "babel-loader" },
-      { test: /\.tsx?$/, loader: "ts-loader" },
-      { test: /\.(png|jp(e*)g|svg|gif)$/, type: "asset/resource" },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
+      {
+        test: /\.(t|j)s(x?)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.(s?)css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+      },
+      { test: /\.(png|svg|PNG|jpe?g|gif|webp)$/i, loader: "file-loader" }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "index.html",
-      favicon: "./src/assets/images/icon.png"
+      template: "index.html"
     }),
-    new webpack.DefinePlugin({
-      "process.env": JSON.stringify(process.env)
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
     }),
+    // new BundleAnalyzerPlugin(),
+    new CleanWebpackPlugin(),
+    new Dotenv(),
     new CopyWebpackPlugin({
       patterns: [
         { from: "./manifest.json", to: "./assets/manifest.json" },
         { from: "./src/assets/images/icon.png", to: "./assets/icon.png" }
       ]
     })
-  ]
+  ],
+  optimization: {
+    minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()]
+  }
 };
 /*eslint-disable */

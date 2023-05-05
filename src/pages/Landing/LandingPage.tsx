@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { postSearchRequest } from "../../common/apis";
 import { IMessage, ISearchResponse } from "./interfaces/interfaces";
 import AppButton from "../../ui-components/appButton/AppButton";
-import useCheckDevice from "../../hook/useDevice";
+import useCheckDevice from "../../hooks/useDevice";
 import MarkdownContainer from "../../components/MarkdownContainer/MarkdownContainer";
 import VoiceSearchIcon from "../../assets/icons/voice-search.svg";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
@@ -14,7 +14,7 @@ const LandingPage: React.FC = () => {
   const markdownListRef = useRef<HTMLInputElement>(null);
   const [searchResponse, setSearchResponse] = useState<ISearchResponse>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const isMobile = useCheckDevice();
+  const { isMobile } = useCheckDevice();
   const [markdownList, setMarkdownList] = useState<JSX.Element[]>([]);
 
   const updateMarkdownList = useCallback(() => {

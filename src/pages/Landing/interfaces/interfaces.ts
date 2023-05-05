@@ -32,3 +32,12 @@ type IUsage = {
   completion_tokens: number;
   total_tokens: number;
 };
+
+export type IErrorMessage = {
+  error: {
+    message: string;
+    type: string;
+    param: string;
+    code: string;
+  };
+};

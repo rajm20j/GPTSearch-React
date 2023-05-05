@@ -1,9 +1,10 @@
 import "./App.scss";
 import "./styles/global.scss";
-import React from "react";
+import React, { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import LandingPage from "./pages/Landing/LandingPage";
+const LandingPage = lazy(() => import("./pages/Landing/LandingPage"));
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import LazyLoadingComponent from "./common/LazyLoadingComponent/LazyLoadingComponent";
 
 const queryClient = new QueryClient();
 const App: React.FC = () => {
@@ -11,7 +12,14 @@ const App: React.FC = () => {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/"
+            element={
+              <LazyLoadingComponent>
+                <LandingPage />
+              </LazyLoadingComponent>
+            }
+          />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </QueryClientProvider>

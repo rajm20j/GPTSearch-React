@@ -1,0 +1,30 @@
+@import "../../styles/partials/colors";
+@import "../../styles/partials/screen-size";
+
+.loading-cont {
+  width: 80%;
+  height: 20px;
+  border-radius: 10px;
+  .loading-cont-block {
+    opacity: 0;
+  }
+}
+
+@media #{$desktop} {
+  .loading-cont {
+    width: 30%;
+    max-width: 300px;
+  }
+}
+
+@keyframes loadAnim {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
