@@ -22,8 +22,5 @@ If you want to contribute to the project, please follow the steps below:
 4. Push your changes to the branch (`git push origin feature/your-feature`)
 5. Create a new Pull Request
 
-## License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-
 ## Credits
 This project was created by [Mayank Raj](https://github.com/rajm20j).
