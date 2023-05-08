@@ -10,6 +10,7 @@ const GptLoading: React.FC = () => {
         return (
           <div
             className="loading-cont-block flx-1 mi-4"
+            key={index.toString()}
             style={{
               backgroundColor: getRandomColor(),
               animation: `loadAnim ${numberOfBlocks}s ${index}s steps(1) infinite`

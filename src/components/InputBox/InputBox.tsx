@@ -7,6 +7,7 @@ import useCheckDevice from "../../hooks/useDevice";
 import VoiceSearchIcon from "../../assets/icons/voice-search.svg";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { IMessage, ISearchResponse } from "../../pages/Landing/interfaces/interfaces";
+import useKeyPress from "../../hooks/useKeyPress";
 
 type InputBoxProps = {
   searchResponse?: ISearchResponse;
@@ -24,10 +25,8 @@ const InputBox: React.FC<InputBoxProps> = ({
   const { isMobile } = useCheckDevice();
   const inputRef = useRef<HTMLInputElement>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
-
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
-
   const { isLoading, mutate } = useMutation({
     mutationFn: postSearchRequest,
     mutationKey: ["chat"],
@@ -35,10 +34,10 @@ const InputBox: React.FC<InputBoxProps> = ({
   });
 
   const onSearch = useCallback(() => {
-    if (inputRef.current.value) {
+    if (inputRef?.current.value) {
       const message: IMessage = {
         role: "user",
-        content: (inputRef.current.value as string).trim()
+        content: (inputRef?.current.value as string).trim()
       };
       mutate({
         body: {
@@ -50,24 +49,20 @@ const InputBox: React.FC<InputBoxProps> = ({
     }
   }, [inputRef, mutate, messages]);
 
+  useKeyPress("Enter", {
+    callback: onSearch
+  });
+
   const onSearchSuccess = useCallback(
     (data: ISearchResponse) => {
       setMessages([...messages, { ...data.choices[0].message }]);
-      data.choices[0].message.content = `**${inputRef.current.value}**\n\n${data.choices[0].message.content}`;
+      data.choices[0].message.content = `**${inputRef?.current.value}**\n\n${data.choices[0].message.content}`;
       setSearchResponse(data);
-      if (inputRef.current.value) {
+      if (inputRef?.current.value) {
         inputRef.current.value = "";
       }
     },
     [inputRef, messages]
-  );
-  const onEnterKeySearch = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === "Enter") {
-        onSearch();
-      }
-    },
-    [onSearch]
   );
 
   const onMouseClickSearch = useCallback(() => {
@@ -83,11 +78,24 @@ const InputBox: React.FC<InputBoxProps> = ({
   }, [browserSupportsSpeechRecognition, resetTranscript, listening]);
 
   const onResetClick = useCallback(() => {
+    inputRef?.current?.blur();
     setMarkdownList([]);
     setSearchResponse(undefined);
     setMessages([]);
   }, []);
 
+  useKeyPress("Escape", {
+    callback: onResetClick
+  })
+
+  const focusInputBox = useCallback(() => {
+    inputRef?.current?.focus();
+  }, []);
+  useKeyPress("Slash", {
+    callback: focusInputBox,
+    event: "keyup"
+  })
+  
   return (
     <div
       className={`input-cont d-flx a-itm-c j-con-c ${isMobile ? "flx-d-col" : ""}`}
@@ -103,7 +111,6 @@ const InputBox: React.FC<InputBoxProps> = ({
       <input
         className="input-text fs-24"
         type="text"
-        onKeyDown={onEnterKeySearch}
         ref={inputRef}
         defaultValue={transcript ?? ""}
         autoFocus
