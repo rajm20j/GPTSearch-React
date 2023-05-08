@@ -7,7 +7,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
+require("dotenv").config({ path: "./.env" });
 
 module.exports = {
   mode: "production",
@@ -25,9 +26,7 @@ module.exports = {
       {
         test: /\.(t|j)s(x?)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: ["babel-loader"]
       },
       {
         test: /\.(s?)css$/,
@@ -46,15 +45,13 @@ module.exports = {
     }),
     // new BundleAnalyzerPlugin(),
     new CleanWebpackPlugin(),
-    new Dotenv({
-      path: '.env'
-    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: "./manifest.json", to: "./assets/manifest.json" },
         { from: "./src/assets/images/icon.png", to: "./assets/icon.png" }
       ]
-    })
+    }),
+    new webpack.DefinePlugin({ "process.env": JSON.stringify(process.env) })
   ],
   optimization: {
     minimizer: [new TerserPlugin(), new OptimizeCSSAssetsPlugin()]
