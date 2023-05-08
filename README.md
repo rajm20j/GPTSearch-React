@@ -7,7 +7,7 @@ To install the necessary modules, run the following command:
 `npm ci`
 
 ## Usage
-Before running the application, you have to update the `OPEN_API_KEY` key in `.env` file. Once you have updated that, you can start the application using the following command:
+Before running the application, you have to create `.env` file in the root folder and add your OpenAPI ChatGPT's api key with the key in following format `OPEN_API_KEY: 'YOUR_API_KEY_HERE'`. Once you have updated that, you can start the application using the following command:
 
 `npm start`
 
