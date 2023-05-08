@@ -46,7 +46,9 @@ module.exports = {
     }),
     // new BundleAnalyzerPlugin(),
     new CleanWebpackPlugin(),
-    new Dotenv(),
+    new Dotenv({
+      path: '.env'
+    }),
     new CopyWebpackPlugin({
       patterns: [
         { from: "./manifest.json", to: "./assets/manifest.json" },
